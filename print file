@@ -1,8 +1,0 @@
-    var divToPrint = document.getElementById(name);
-    var newWin = window.open("");
-    newWin.document.write(
-      "<body  style='width: 220px;font-size: 40px;height: 100px'>"
-    );
-    newWin.document.write(divToPrint.outerHTML);
-    newWin.document.write("</body>");
-    newWin.print();
