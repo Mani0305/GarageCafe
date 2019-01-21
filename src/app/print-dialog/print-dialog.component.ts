@@ -15,19 +15,19 @@ export class PrintDialogComponent implements OnInit {
   billDetails: {totalCost: number, itemDetails: {name: String, category: String, price: number}[]};
   secondTimePrint: boolean = false;
   currentTime: String ;
-  alwaysFalse: boolean = false;
   currentDate: String; 
   printFlag: boolean = false;
   billNumber: number = 0;
+  
   constructor(
     private firebaseService: MyService,
-    private route: Router,public thisDialogRef: MatDialogRef<PrintDialogComponent>,
-     @Inject(MAT_DIALOG_DATA) public data:{totalCost:number, itemDetails: {name: String, category: String, price: number}[]}) {
+    private route: Router,
+    public thisDialogRef: MatDialogRef<PrintDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data:{totalCost:number, itemDetails: {name: String, category: String, price: number}[]}) {
        this.billDetails = data;
  }
 
   ngOnInit() {
-    console.log(this.billDetails);
     this.firebaseService.getBillNumber().on('value', data => {
       if(data.val() === null) {
           this.billNumber = 1;
@@ -46,25 +46,22 @@ export class PrintDialogComponent implements OnInit {
   print(name) {
     const date = new Date();
     this.secondTimePrint = true;
-     
     var divToPrint=document.getElementById(name);
-   var newWin= window.open("");
-  //  newWin.document.write("<body  style='width: 220px;font-size: 40px;height: 100px'>");
-  //  newWin.document.write(divToPrint.outerHTML);
-  //  newWin.document.write("</body>");
-  //  newWin.print();
-   this.printFlag = true;
-   const currentDate = date.getDate() + '-' + date.getMonth()+1 + '-' + date.getFullYear();
-   const currentTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() ;
-   console.log(currentDate);
-   console.log(this.billDetails);
-   this.firebaseService.stats(this.billDetails.itemDetails, currentDate, currentTime);
-   this.firebaseService.billNumber(this.billNumber);
-   this.thisDialogRef.close('one print has taken');
-   this.route.navigate(['/home']);
-   newWin.close();
-   console.log(currentDate );
-   console.log(this.billDetails );
+    var newWin= window.open("");
+    newWin.document.write("<body  style='width: 220px;font-size: 40px;height: 100px'>");
+    newWin.document.write(divToPrint.outerHTML);
+    newWin.document.write("</body>");
+    newWin.print();
+    newWin.close();
+    
+    this.printFlag = true;
+    const currentDate = date.getDate() + '-' + date.getMonth()+1 + '-' + date.getFullYear();
+    const currentTime = date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() ;
+    this.firebaseService.stats(this.billDetails.itemDetails, currentDate, currentTime);
+    this.firebaseService.billNumber(this.billNumber);
+    this.thisDialogRef.close('one print has taken');
+    this.route.navigate(['/home']);
+    
   }
 
   cancel(){
@@ -73,7 +70,6 @@ export class PrintDialogComponent implements OnInit {
     } else {
       this.thisDialogRef.close('no print has been taken');
     }
-
   }
 }
 
